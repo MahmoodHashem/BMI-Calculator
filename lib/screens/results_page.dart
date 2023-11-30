@@ -42,7 +42,7 @@ class Result extends StatelessWidget {
                 children: [
                   Text(result, style: const TextStyle(fontSize: 30, color: Colors.green),),
                   Text(bmi, style: const TextStyle(fontSize: 100, fontWeight: FontWeight.bold),),
-                  Text(interpretation, style: const TextStyle(fontSize: 20), ),
+                  Text(interpretation, textAlign: TextAlign.center, style: const TextStyle(fontSize: 20), ),
                 ],
               ),
             ),
