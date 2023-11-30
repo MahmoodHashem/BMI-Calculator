@@ -1,6 +1,7 @@
 
 import 'package:bmi/components/reusable_card.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../constants.dart';
 import '../components/bottom_container.dart';
 class Result extends StatelessWidget {
@@ -18,6 +19,7 @@ class Result extends StatelessWidget {
         title: const Text("BMI CALCULATOR"),
         centerTitle: true,
       ),
+
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.stretch,

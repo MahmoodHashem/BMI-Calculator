@@ -7,6 +7,9 @@ import 'results_page.dart';
 import '../components/roundIconButton_widget.dart';
 import '../components/bottom_container.dart';
 import 'package:bmi/components/calculator_brain.dart';
+import 'package:bmi/models/history.dart';
+import 'package:bmi/screens/history_screen.dart';
+import 'package:bmi/models/preference_services.dart';
 
 enum Gender { male, female }
 
@@ -18,17 +21,90 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
+
+  PreferenceService _preference = PreferenceService();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getHistory();
+  }
+
   Gender? selectedGender;
   int height = 180;
   int weight = 30;
   int age = 19;
 
+  List<String> bmiHistoryList = [];
+  List<String> resultHistoryList = [];
+
+  _getHistory() async{
+
+    final historyGetter = await _preference.getHistory();
+    bmiHistoryList = historyGetter.bmi;
+    resultHistoryList = historyGetter.result;
+
+  }
   @override
   Widget build(BuildContext context) {
+    CalculatorBrain c = CalculatorBrain(height: height, weight: weight);
+
+    History history = History(
+      bmi: bmiHistoryList,
+      result: resultHistoryList,
+    );
+
     return Scaffold(
         appBar: AppBar(
           title: const Text("BMI Calculator"),
           centerTitle: true,
+        ),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              DrawerHeader(
+                  child: Container(
+                color: Colors.blue,
+                child: const Center(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "BMI",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text("Body Mass Index"),
+                    Text("Measurement"),
+                  ],
+                )),
+              )),
+              ListTile(
+                title: const Center(
+                    child: Text(
+                  "History",
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                )),
+                onTap: () {
+                  _getHistory();
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HistoryPage(
+                                bmi: bmiHistoryList,
+                                result: resultHistoryList,
+                              )));
+                },
+              )
+            ],
+          ),
         ),
         body: Column(
           children: [
@@ -206,8 +282,11 @@ class _InputPageState extends State<InputPage> {
             ),
             BottomContainer(
               navigate: () {
-                CalculatorBrain c =
-                    CalculatorBrain(height: height, weight: weight);
+
+                bmiHistoryList.add(c.bmiCalculation());
+                resultHistoryList.add(c.getResult());
+
+                _preference.saveHistory(history);
 
                 Navigator.push(
                   context,
