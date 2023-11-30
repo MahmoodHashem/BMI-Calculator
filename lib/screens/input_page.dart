@@ -300,7 +300,7 @@ class _InputPageState extends State<InputPage> {
                 );
               },
               title: "CALCULATE",
-            )
+            ),
           ],
         ));
   }
