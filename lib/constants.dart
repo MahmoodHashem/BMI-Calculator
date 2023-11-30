@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/number_symbols.dart';
 
 const kBottomContainerHeight = 80.0;
 const kActiveCardColour = Color(0xFF1D1F33);
@@ -11,3 +13,4 @@ const kNumberTextStyle = TextStyle(fontSize: 40.0, fontWeight: FontWeight.w900);
 const kResultBottunStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
 const kTitleStyle = TextStyle(fontSize: 50, fontWeight: FontWeight.bold);
+

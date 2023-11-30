@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import '../components/reusable_card.dart';
 import '../components/icon_content.dart';
 import '../constants.dart';
@@ -10,6 +11,7 @@ import 'package:bmi/components/calculator_brain.dart';
 import 'package:bmi/models/history.dart';
 import 'package:bmi/screens/history_screen.dart';
 import 'package:bmi/models/preference_services.dart';
+import 'package:intl/number_symbols.dart';
 
 enum Gender { male, female }
 
@@ -38,12 +40,20 @@ class _InputPageState extends State<InputPage> {
 
   List<String> bmiHistoryList = [];
   List<String> resultHistoryList = [];
+  List<String> hourList = [];
+  List<String> monthList = [];
+  List<String> heightList = [];
+  List<String> weightList = [];
 
   _getHistory() async{
 
     final historyGetter = await _preference.getHistory();
     bmiHistoryList = historyGetter.bmi;
     resultHistoryList = historyGetter.result;
+    heightList = historyGetter.height;
+    weightList = historyGetter.weight;
+    hourList = historyGetter.hour;
+    monthList = historyGetter.month;
 
   }
   @override
@@ -53,6 +63,10 @@ class _InputPageState extends State<InputPage> {
     History history = History(
       bmi: bmiHistoryList,
       result: resultHistoryList,
+      height: heightList,
+      weight: weightList,
+      hour: hourList,
+      month: monthList,
     );
 
     return Scaffold(
@@ -65,7 +79,7 @@ class _InputPageState extends State<InputPage> {
             children: [
               DrawerHeader(
                   child: Container(
-                color: Colors.blue,
+                color: kInactiveCardColour,
                 child: const Center(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -100,6 +114,10 @@ class _InputPageState extends State<InputPage> {
                           builder: (context) => HistoryPage(
                                 bmi: bmiHistoryList,
                                 result: resultHistoryList,
+                                height: heightList,
+                                weight: weightList,
+                                hour: hourList,
+                                month: monthList,
                               )));
                 },
               )
@@ -283,8 +301,25 @@ class _InputPageState extends State<InputPage> {
             BottomContainer(
               navigate: () {
 
+                String? hour;
+                String? month;
+                setState(() {
+                  final DateTime time = DateTime.now();
+                  hour = DateFormat().add_jm().format(time);
+                  month = DateFormat().add_MMMd().format(time);
+                  hourList.add(hour!);
+                  monthList.add(month!);
+                });
+
+
+
+
                 bmiHistoryList.add(c.bmiCalculation());
                 resultHistoryList.add(c.getResult());
+                heightList.add(height.toString());
+                weightList.add(weight.toString());
+                hourList.add(hour!);
+                monthList.add(month!);
 
                 _preference.saveHistory(history);
 
